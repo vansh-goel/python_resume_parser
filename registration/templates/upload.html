@@ -1,0 +1,43 @@
+
+<!-- templates/upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Resume</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="grid place-content-start items-center justify-center py-8 gap-4 min-h-screen w-full bg-indigo-400">
+    <h1 class="text-4xl text-black">Upload Resume</h1>
+    <form id="resumeUploadForm" enctype="multipart/form-data" class="grid grid-flow-row gap-2">
+        <p class="w-full grid place-content-center">{% csrf_token %}</p>
+        <input type="file" name="resume" id="resumeFile" required class="bg-white/20 rounded-md p-2">
+        <button type="submit" class="border-4 border-black rounded-md bg-white/30 p-2">Upload Resume</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $('#resumeUploadForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: "{% url 'parse_resume' %}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        window.localStorage.setItem('parsedData', JSON.stringify(data));
+                        window.location.href = "{% url 'form' %}";
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Failed to parse resume: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

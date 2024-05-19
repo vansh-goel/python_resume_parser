@@ -1,0 +1,36 @@
+
+<!-- templates/filledForm.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Your Profile</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="grid bg-indigo-400 gap-2 place-content-center min-h-screen w-full">
+    <h1 class="text-3xl">Complete Your Profile</h1>
+    <form method="post" class="grid gap-4 place-content-center" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="bg-white/20 rounded-md border-4 border-black p-2" type="submit">Submit</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            var parsedData = JSON.parse(window.localStorage.getItem('parsedData'));
+            if (parsedData) {
+                $('input[name="first_name"]').val(parsedData.name.split(' ')[0]);
+                $('input[name="last_name"]').val(parsedData.name.split(' ').slice(1).join(' '));
+                $('input[name="email"]').val(parsedData.email);
+                $('input[name="phone_number"]').val(parsedData.phone);
+                $('textarea[name="address"]').val(parsedData.address);
+                window.localStorage.removeItem('parsedData');
+            }
+        });
+    </script>
+  </div>
+</body>
+</html>
+
